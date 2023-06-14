@@ -1,0 +1,30 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "dbt.fullname" . }}
+  namespace: {{ .Values.namespace }}
+  labels:
+    app.kubernetes.io/name: {{ include "dbt.name" . }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
+spec:
+  replicas: {{ .Values.dbt.deployment.replicas }}
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: {{ include "dbt.name" . }}
+      app.kubernetes.io/instance: {{ .Release.Name }}
+  strategy:
+    type: {{ .Values.dbt.deployment.strategy.type }}
+    rollingUpdate:
+      maxSurge: {{ .Values.dbt.deployment.strategy.maxSurge }}
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: {{ include "dbt.name" . }}
+        app.kubernetes.io/instance: {{ .Release.Name }}
+    spec:
+      containers:
+      - name: {{ include "dbt.name" . }}
+        image: "{{ .Values.dbt.deployment.image.repository }}:{{ .Values.dbt.deployment.image.tag }}"
+        ports:
+        - containerPort: {{ .Values.dbt.deployment.ports.port1 }}

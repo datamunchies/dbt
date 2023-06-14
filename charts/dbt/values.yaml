@@ -1,0 +1,31 @@
+namespace: dev
+
+dbt:
+  # Deployment configuration
+  deployment:
+    name: dbt
+    replicas: 1
+    strategy:
+      type: RollingUpdate
+      maxSurge: 3
+    image: 
+      repository: slowsunday/dbt-service
+      tag: latest
+    ports:
+      port1: 8000
+
+  # ConfigMap configuration
+  configmap:
+    enabled: true
+    name: dbt-config
+    svcHost: clickhouse
+    port: "8000"
+
+  # Service configuration
+  service:
+    type: ClusterIP
+    ports:
+      http:
+        name: http
+        port: 8000
+        targetPort: 8000
