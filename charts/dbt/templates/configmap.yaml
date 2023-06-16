@@ -1,4 +1,4 @@
-{{- if .Values.dbt.configmap.enabled -}}
+{{- if .Values.dbt.configmap.enabled }}
 apiVersion: v1
 kind: ConfigMap
 metadata:
@@ -10,4 +10,4 @@ metadata:
   namespace: {{ .Values.namespace }}
 data:
   CLICKHOUSE_SERVICE_ADDRESS: "{{ .Values.dbt.configmap.svcHost }}"
-{{- end -}}
+{{- end }}
