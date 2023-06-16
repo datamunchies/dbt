@@ -27,4 +27,20 @@ spec:
       - name: {{ include "dbt.name" . }}
         image: "{{ .Values.dbt.deployment.image.repository }}:{{ .Values.dbt.deployment.image.tag }}"
         ports:
-        - containerPort: {{ .Values.dbt.deployment.ports.port1 }}
+        - containerPort: {{ .Values.dbt.deployment.ports.port }}
+        {{- if .Values.dbt.deployment.livenessProbe.enabled }}
+        livenessProbe:
+          exec:
+            command: {{ .Values.dbt.deployment.livenessProbe.exec.command }}
+          initialDelaySeconds: {{ .Values.dbt.deployment.livenessProbe.initialDelaySeconds }}
+        {{- end }}
+        {{- if .Values.dbt.deployment.readinessProbe.enabled }}
+        readinessProbe:
+          exec:
+            command: {{ .Values.dbt.deployment.readinessProbe.exec.command }}
+          initialDelaySeconds: {{ .Values.dbt.deployment.readinessProbe.initialDelaySeconds }}
+        {{- end }}
+        securityContext:
+          privileged: {{ .Values.dbt.deployment.securityContext.privileged }}
+          runAsUser: {{ .Values.dbt.deployment.securityContext.runAsUser }}
+          runAsNonRoot: {{ .Values.dbt.deployment.securityContext.runAsNonRoot }}

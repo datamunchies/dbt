@@ -60,6 +60,4 @@ RUN chown -R appuser $DBT_DIR
 
 USER appuser
 
-EXPOSE 8000
-
 ENTRYPOINT ["tail","-f", "/dev/null"]

@@ -12,14 +12,34 @@ dbt:
       repository: slowsunday/dbt-service
       tag: latest
     ports:
-      port1: 8000
+      port: 8000
 
+    securityContext:
+      runAsUser: 1000
+      privileged: false
+      runAsNonRoot: false
+
+    livenessProbe:
+      enabled: false
+      exec:
+        command:
+          - "dbt"
+          - "--version"
+      initialDelaySeconds: 10
+
+    readinessProbe:
+      enabled: false
+      exec:
+        command:
+          - "dbt"
+          - "--version"
+      initialDelaySeconds: 10
+    
   # ConfigMap configuration
   configmap:
     enabled: true
     name: dbt-config
     svcHost: clickhouse
-    port: "8000"
 
   # Service configuration
   service:
