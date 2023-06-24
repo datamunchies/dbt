@@ -23,17 +23,18 @@ dbt:
       enabled: false
       exec:
         command:
-          - "dbt"
-          - "--version"
+          - ./readinessProbe.sh
       initialDelaySeconds: 10
+      periodSeconds: 360
+      timeoutSeconds: 5
 
     readinessProbe:
-      enabled: false
+      enabled: true
       exec:
         command:
-          - "dbt"
-          - "--version"
+          - ./readinessProbe.sh
       initialDelaySeconds: 10
+      timeoutSeconds: 5
     
   # ConfigMap configuration
   configmap:

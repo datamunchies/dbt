@@ -40,23 +40,29 @@ RUN python -m pip install --no-cache-dir "git+https://github.com/dbt-labs/${dbt_
 RUN python -m pip install --no-cache-dir "git+https://github.com/ClickHouse/${dbt_clickhouse_ref}#egg=dbt-clickhouse"
 
 
-COPY ./profiles.yml /dbt/profiles.yml
-COPY ./models /dbt/models
-COPY ./tests /dbt/tests
-COPY ./target /dbt/target
-COPY ./dbt_packages /dbt/dbt_packages
-COPY ./dbt_modules /dbt/dbt_modules
-COPY ./macros /dbt/macros
-COPY ./tests /dbt/tests
-COPY ./logs /dbt/logs
-COPY ./seeds /dbt/seeds
-COPY ./snapshots /dbt/snapshots
+COPY ./profiles.yml $DBT_DIR/profiles.yml
+COPY ./models $DBT_DIR/models
+COPY ./tests $DBT_DIR/tests
+COPY ./target $DBT_DIR/target
+COPY ./dbt_packages $DBT_DIR/dbt_packages
+COPY ./dbt_modules $DBT_DIR/dbt_modules
+COPY ./macros $DBT_DIR/macros
+COPY ./tests $DBT_DIR/tests
+COPY ./logs $DBT_DIR/logs
+COPY ./seeds $DBT_DIR/seeds
+COPY ./snapshots $DBT_DIR/snapshots
+
+COPY ./scripts/readinessProbe.sh $DBT_DIR/readinessProbe.sh
+COPY ./scripts/livenessProbe.sh $DBT_DIR/livenessProbe.sh
 
 # Set working directory
 WORKDIR $DBT_DIR
 
 # change owner for /dbt directory
 RUN chown -R appuser $DBT_DIR
+
+RUN chmod +x $DBT_DIR/readinessProbe.sh
+RUN chmod +x $DBT_DIR/livenessProbe.sh
 
 USER appuser
 
