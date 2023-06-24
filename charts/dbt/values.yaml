@@ -20,7 +20,7 @@ dbt:
       runAsNonRoot: false
 
     livenessProbe:
-      enabled: false
+      enabled: true
       exec:
         command:
           - ./readinessProbe.sh
