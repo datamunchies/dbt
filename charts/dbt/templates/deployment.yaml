@@ -7,6 +7,9 @@ metadata:
     app.kubernetes.io/name: {{ include "dbt.name" . }}
     app.kubernetes.io/instance: {{ .Release.Name }}
     app.kubernetes.io/managed-by: {{ .Release.Service }}
+    owner: {{ .Values.dbt.deployment.metadata.labels.owner | toString}}
+    app.kubernetes.io/component: {{ .Values.dbt.deployment.metadata.labels.component | toString }}
+    app.kubernetes.io/part-of: {{ .Values.dbt.deployment.metadata.labels.part_of | toString }}
 spec:
   replicas: {{ .Values.dbt.deployment.replicas }}
   selector:
@@ -25,6 +28,15 @@ spec:
     spec:
       containers:
       - name: {{ include "dbt.name" . }}
+        {{- if .Values.dbt.deployment.resources.enabled }}
+        resources:
+          limits:
+            cpu: {{ .Values.dbt.deployment.resources.limits.cpu }}
+            memory: {{ .Values.dbt.deployment.resources.limits.memory }}
+          requests:
+            cpu: {{ .Values.dbt.deployment.resources.requests.cpu }}
+            memory: {{ .Values.dbt.deployment.resources.requests.memory }}
+        {{- end }}
         image: "{{ .Values.dbt.deployment.image.repository }}:{{ .Values.dbt.deployment.image.tag }}"
         ports:
         - containerPort: {{ .Values.dbt.deployment.ports.port }}
@@ -45,5 +57,5 @@ spec:
           exec:
             command: {{ .Values.dbt.deployment.readinessProbe.exec.command }}
           initialDelaySeconds: {{ .Values.dbt.deployment.readinessProbe.initialDelaySeconds }}
-          timeoutSeconds: {{ .Values.dbt.deployment.livenessProbe.timeoutSeconds }}
+          timeoutSeconds: {{ .Values.dbt.deployment.readinessProbe.timeoutSeconds }}
         {{- end }}
