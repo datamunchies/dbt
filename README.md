@@ -1,2 +1,2 @@
-# dbt-service
+# dbt
 dbt-service
